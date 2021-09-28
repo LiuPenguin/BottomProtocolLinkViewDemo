@@ -21,6 +21,8 @@
 
 #import "WLoginProtocolLinkView.h"
 
+#import <Masonry/Masonry.h>
+
 
 @implementation WLoginProtocolLinkModel
 
@@ -95,6 +97,8 @@
 //点击协议回调
 @property (nonatomic, copy) void (^protocolTapCallBack)(NSInteger protocolTapIndex,NSString * protocolTapLink);
 
+@property (nonatomic, copy) WLoginProtocolLinkView * (^viewFrame)(CGRect);
+
 @end
 
 @implementation WLoginProtocolLinkView
@@ -122,6 +126,36 @@
     return [WLoginProtocolLinkView initWLoginProtocolLinkViewConfig:nil WithProtocolList:protocolList checkBtnClickCallBack:checkBtnClickCallBack protocolTapCallBack:protocolTapCallBack];
 }
 
++ (WLoginProtocolLinkView *)makeCustomView:(void(^)(WLoginProtocolLinkView * customView))custom{
+    WLoginProtocolLinkView * linkView = [WLoginProtocolLinkView new];
+    
+    [linkView makeCustomView:^(WLoginProtocolLinkView *linkView) {
+        linkView.viewFrame(CGRectMake(0, 0, 100, 100));
+    }];
+    [linkView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+    }];
+//    [linkView makeCustomView:^(WLoginProtocolLinkView *linkView) {
+//        linkView.viewFrame().
+//    }];
+    return linkView;
+}
+
+- (WLoginProtocolLinkView *)makeCustomView:(void(^)(WLoginProtocolLinkView *linkView))linkViewBlock{
+    if (linkViewBlock) {
+        linkViewBlock(self);
+    }
+    return self;
+}
+
+- (WLoginProtocolLinkView * (^)(CGRect))viewFrame{
+    
+    WLoginProtocolLinkView * (^frame)(CGRect) = ^(CGRect frame){
+        self.frame = frame;
+        return self;
+    };
+    return frame;
+}
 
 
 - (instancetype)init {
